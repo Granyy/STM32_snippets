@@ -26,8 +26,9 @@ ARCH_FLAGS=-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wno-psabi
 
 CFLAGS+=-O0 -g3
 CFLAGS+=$(ARCH_FLAGS)
-CFLAGS+=-ffunction-sections -MMD 
+CFLAGS+=-ffunction-sections
 CFLAGS+=-fdata-sections
+CFLAGS+=-MMD
 CFLAGS+=-DSTM32 -DSTM32L4 -DSTM32L432KCUx -DNUCLEO_L432KC -DDEBUG -DSTM32L432xx -DUSE_HAL_DRIVER
 CFLAGS+=$(foreach i, $(INCDIRS), -I$(i))
 
@@ -72,11 +73,6 @@ $(TARGET).elf: $(OBJS)
 clean:
 	@echo " CLEAN"
 	@rm -fR $(OBJS) $(TARGET) $(TARGET:.elf=hex) $(TARGET:.elf=.bin)
-	
-userclean:
-	@echo " CLEAN USER FILE"
-	@rm $(shell find ./src/ -name "*.o")
-	@rm $(shell find ./src/ -name "*.d")
 
 bin: $(TARGET).elf
 	@echo " OBJCOPY  $(TARGET:.elf=.hex)"
@@ -90,3 +86,4 @@ size: $(TARGET).elf
 
 flash:
 	$(OPENOCD) -s $(OPENOCD_DIR) -f $(OPENOCD_CFG) -c "init;reset halt;flash write_image erase $(TARGET).bin 0x08000000;reset;shutdown"
+	
