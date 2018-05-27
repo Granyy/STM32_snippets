@@ -1,1 +1,1 @@
-# STM32_snippets
+# STM32 snippets
